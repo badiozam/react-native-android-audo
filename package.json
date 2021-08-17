@@ -1,7 +1,7 @@
 {
-  "name": "react-native-android-auto",
+  "name": "react-native-android-audo",
   "title": "React Native Android Auto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Android auto integration for React native apps",
   "main": "lib/index.js",
   "files": [
