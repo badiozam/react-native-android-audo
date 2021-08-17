@@ -1,7 +1,7 @@
 {
   "name": "react-native-android-audo",
   "title": "React Native Android Auto",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Android auto integration for React native apps",
   "main": "lib/index.js",
   "files": [
@@ -9,6 +9,7 @@
     "android",
     "index.js",
     "ios",
+    "lib",
     "react-native-android-auto.podspec"
   ],
   "scripts": {
@@ -25,8 +26,8 @@
     "react-native"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "yourname@email.com"
+    "name": "Hamid Badiozamani",
+    "email": "badiozam@yahoo.com"
   },
   "license": "private",
   "licenseFilename": "LICENSE",
