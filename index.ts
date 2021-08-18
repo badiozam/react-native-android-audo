@@ -1,10 +1,14 @@
-import { NativeModules } from 'react-native';
-import './android-auto.global';
+import { NativeModules } from "react-native";
 
 const { AndroidAuto } = NativeModules;
 
-export { Screen, ScreenManager, useCarNavigation } from "./AndroidAutoReact";
-export { render } from "./AndroidAutoReconciler";
-export { AndroidAutoModule } from "./AndroidAuto";
-
 export default AndroidAuto;
+
+export {
+  Screen,
+  ScreenManager,
+  useCarNavigation,
+} from "./src/AndroidAutoReact";
+export { render } from "./src/AndroidAutoReconciler";
+export { AndroidAutoModule } from "./src/AndroidAuto";
+import "./src/android-auto.global";
