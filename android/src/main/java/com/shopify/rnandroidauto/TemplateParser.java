@@ -73,8 +73,10 @@ public class TemplateParser {
         Log.d("ReactAUTO", "Adding child with type " + type + " to row");
 
         if (type.equals("row")) {
+          Log.d("ReactAUTO", "Parsing row");
           paneBuilder.addRow(buildRow(child));
         } else if (type.equals("action")) {
+          Log.d("ReactAUTO", "Parsing action");
           actions.add(parseAction(child));
         } else {
           Log.d("ReactAUTO", "Unknown type " + type);
@@ -132,7 +134,9 @@ public class TemplateParser {
       builder.setTitle(map.getString("title"));
       try {
         builder.setBackgroundColor(getColor(map.getString("backgroundColor")));
-      } catch (NoSuchKeyException e) {}
+      } catch (NoSuchKeyException e) {
+        Log.d("ReactAUTO", "Couldn't set background color", e);
+      }
 
       try {
         int onPress = map.getInt("onPress");
@@ -145,6 +149,8 @@ public class TemplateParser {
       } catch (NoSuchKeyException e) {
         Log.d("ReactAUTO", "Couldn't parseAction", e);
       }
+    } else {
+      Log.d("ReactAUTO", "No readable map supplied to parseAction");
     }
 
     return builder.build();
@@ -291,7 +297,7 @@ public class TemplateParser {
     try {
       ReadableArray texts = rowRenderMap.getArray("texts");
 
-      for (int i = 0; i < texts.size(); i++) {
+      for (int i = 0; texts != null && i < texts.size(); i++) {
         builder.addText(texts.getString(i));
       }
     } catch (NoSuchKeyException e) {}
