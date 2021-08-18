@@ -51,6 +51,7 @@ public class TemplateParser {
   private PaneTemplate parsePaneTemplate(ReadableMap map) {
     Pane.Builder paneBuilder = Pane.builder();
 
+
     ReadableArray children = map.getArray("children");
 
     boolean loading;
@@ -80,6 +81,7 @@ public class TemplateParser {
           actions.add(parseAction(child));
         } else {
           Log.d("ReactAUTO", "Unknown type " + type);
+
         }
       }
 
@@ -90,6 +92,7 @@ public class TemplateParser {
     }
 
     PaneTemplate.Builder builder = PaneTemplate.builder(paneBuilder.build());
+
 
     String title = map.getString("title");
     if (title == null || title.length() == 0) {
@@ -112,6 +115,7 @@ public class TemplateParser {
 
   private ActionStrip parseActionStrip(ReadableMap map) {
     ActionStrip.Builder builder = ActionStrip.builder();
+
 
     if (map != null) {
       ReadableArray actions = map.getArray("actions");
@@ -177,14 +181,17 @@ public class TemplateParser {
       }
     } else {
       return CarColor.DEFAULT;
+
     }
   }
 
   private PlaceListMapTemplate parsePlaceListMapTemplate(ReadableMap map) {
     PlaceListMapTemplate.Builder builder = PlaceListMapTemplate.builder();
 
+
     builder.setTitle(map.getString("title"));
     ReadableArray children = map.getArray("children");
+
 
     try {
       builder.setHeaderAction(getHeaderAction(map.getString("headerAction")));
@@ -222,11 +229,13 @@ public class TemplateParser {
       builder.setActionStrip(parseActionStrip(actionStripMap));
     } catch (NoSuchKeyException e) {}
 
+
     return builder.build();
   }
 
   private ListTemplate parseListTemplateChildren(ReadableMap map) {
     ReadableArray children = map.getArray("children");
+
 
     ListTemplate.Builder builder = ListTemplate.builder();
 
@@ -362,6 +371,7 @@ public class TemplateParser {
   private void invokeCallback(int callbackId) {
     invokeCallback(callbackId, null);
   }
+
 
   private void invokeCallback(int callbackId, WritableNativeMap params) {
     if (params == null) {
