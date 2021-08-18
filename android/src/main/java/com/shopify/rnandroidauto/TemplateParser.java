@@ -88,7 +88,15 @@ public class TemplateParser {
 
         PaneTemplate.Builder builder = PaneTemplate.builder(paneBuilder.build());
 
-        builder.setTitle(map.getString("title"));
+	String title = map.getString("title");
+	if ( title == null || title.length() == 0 )
+	{
+        	builder.setTitle("<No Title>");
+	}
+	else
+	{
+        	builder.setTitle(title);
+	}
 
         try {
             builder.setHeaderAction(getHeaderAction(map.getString("headerAction")));
