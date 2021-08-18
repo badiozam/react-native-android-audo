@@ -3,10 +3,8 @@ package com.shopify.rnandroidauto;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -24,112 +22,126 @@ import com.shopify.rnandroidauto.AndroidAutoModule;
 import com.shopify.rnandroidauto.AndroidAutoPackage;
 
 public final class CarService extends CarAppService {
-    private ReactInstanceManager mReactInstanceManager;
-    private CarScreen screen;
 
-    @Override
-    public void onCreate() {
-        mReactInstanceManager = ((ReactApplication) getApplication()).getReactNativeHost().getReactInstanceManager();
-        // mReactInstanceManager = makeInstance();
-    }
+  private ReactInstanceManager mReactInstanceManager;
+  private CarScreen screen;
 
-    private ReactInstanceManager makeInstance() {
-        ReactInstanceManagerBuilder builder =
-                ReactInstanceManager.builder()
-                        .setApplication(getApplication())
-                        .setJSMainModulePath("android_auto")
-                        .setUseDeveloperSupport(true)
-                        // .setRedBoxHandler(new CarRedBoxHandler())
-                        .setJSIModulesPackage(null)
-                        .setInitialLifecycleState(LifecycleState.BEFORE_CREATE);
+  @Override
+  public void onCreate() {
+    mReactInstanceManager =
+      ((ReactApplication) getApplication()).getReactNativeHost()
+        .getReactInstanceManager();
+    // mReactInstanceManager = makeInstance();
+  }
 
-        // String jsBundleFile = null;
-        // if (jsBundleFile != null) {
-        //     builder.setJSBundleFile(jsBundleFile);
-        // } else {
-        //     builder.setBundleAssetName(Assertions.assertNotNull("index.android.bundle"));
-        // }
+  private ReactInstanceManager makeInstance() {
+    ReactInstanceManagerBuilder builder = ReactInstanceManager
+      .builder()
+      .setApplication(getApplication())
+      .setJSMainModulePath("android_auto")
+      .setUseDeveloperSupport(true)
+      // .setRedBoxHandler(new CarRedBoxHandler())
+      .setJSIModulesPackage(null)
+      .setInitialLifecycleState(LifecycleState.BEFORE_CREATE);
 
-        builder.addPackage(new AndroidAutoPackage());
+    // String jsBundleFile = null;
+    // if (jsBundleFile != null) {
+    //     builder.setJSBundleFile(jsBundleFile);
+    // } else {
+    //     builder.setBundleAssetName(Assertions.assertNotNull("index.android.bundle"));
+    // }
 
-        ReactInstanceManager reactInstanceManager = builder.build();
+    builder.addPackage(new AndroidAutoPackage());
 
-        return reactInstanceManager;
-    }
+    ReactInstanceManager reactInstanceManager = builder.build();
 
-    @Override
-    @NonNull
-    public Screen onCreateScreen(@Nullable Intent intent) {
-	Log.d("Auto", "On create screen " + intent.getAction() + " - " + intent.getDataString());
-        screen = new CarScreen(getCarContext(), mReactInstanceManager.getCurrentReactContext());
-        screen.setMarker("root");
-        runJsApplication();
+    return reactInstanceManager;
+  }
 
-        return screen;
-    }
+  @Override
+  @NonNull
+  public Screen onCreateScreen(@Nullable Intent intent) {
+    Log.d(
+      "Auto",
+      "On create screen " + intent.getAction() + " - " + intent.getDataString()
+    );
+    screen =
+      new CarScreen(
+        getCarContext(),
+        mReactInstanceManager.getCurrentReactContext()
+      );
+    screen.setMarker("root");
+    runJsApplication();
 
-    @Override
-    public void onCarAppFinished() {
-        super.onCarAppFinished();
+    return screen;
+  }
 
-        // Should we tear down the app here?
-        // mReactInstanceManager.destroy();
-    }
+  @Override
+  public void onCarAppFinished() {
+    super.onCarAppFinished();
+    // Should we tear down the app here?
+    // mReactInstanceManager.destroy();
+  }
 
-    private void runJsApplication() {
-//        mReactInstanceManager.getDevSupportManager().setHotModuleReplacementEnabled(false);
-        ReactContext reactContext = mReactInstanceManager.getCurrentReactContext();
+  private void runJsApplication() {
+    //        mReactInstanceManager.getDevSupportManager().setHotModuleReplacementEnabled(false);
+    ReactContext reactContext = mReactInstanceManager.getCurrentReactContext();
 
-        if (reactContext == null) {
-            mReactInstanceManager.addReactInstanceEventListener(
-                    new ReactInstanceManager.ReactInstanceEventListener() {
-                        @Override
-                        public void onReactContextInitialized(ReactContext reactContext) {
-                            invokeStartTask(reactContext);
-                            mReactInstanceManager.removeReactInstanceEventListener(this);
-                        }
-                    });
-            mReactInstanceManager.createReactContextInBackground();
-        } else {
+    if (reactContext == null) {
+      mReactInstanceManager.addReactInstanceEventListener(
+        new ReactInstanceManager.ReactInstanceEventListener() {
+          @Override
+          public void onReactContextInitialized(ReactContext reactContext) {
             invokeStartTask(reactContext);
+            mReactInstanceManager.removeReactInstanceEventListener(this);
+          }
         }
+      );
+      mReactInstanceManager.createReactContextInBackground();
+    } else {
+      invokeStartTask(reactContext);
     }
+  }
 
-    @Override
-    public void onNewIntent(@NonNull Intent intent) {
-        super.onNewIntent(intent);
-    }
+  @Override
+  public void onNewIntent(@NonNull Intent intent) {
+    super.onNewIntent(intent);
+  }
 
-    private void invokeStartTask(ReactContext reactContext) {
-        try {
-            if (mReactInstanceManager == null) {
-                return;
-            }
+  private void invokeStartTask(ReactContext reactContext) {
+    try {
+      if (mReactInstanceManager == null) {
+        return;
+      }
 
-            if (reactContext == null) {
-                return;
-            }
+      if (reactContext == null) {
+        return;
+      }
 
-            CatalystInstance catalystInstance = reactContext.getCatalystInstance();
-            String jsAppModuleName = "androidAuto";
+      CatalystInstance catalystInstance = reactContext.getCatalystInstance();
+      String jsAppModuleName = "androidAuto";
 
-            WritableNativeMap appParams = new WritableNativeMap();
-            appParams.putDouble("rootTag", 1.0);
-            @Nullable Bundle appProperties = Bundle.EMPTY;
-            if (appProperties != null) {
-                appParams.putMap("initialProps", Arguments.fromBundle(appProperties));
-            }
+      WritableNativeMap appParams = new WritableNativeMap();
+      appParams.putDouble("rootTag", 1.0);
+      @Nullable
+      Bundle appProperties = Bundle.EMPTY;
+      if (appProperties != null) {
+        appParams.putMap("initialProps", Arguments.fromBundle(appProperties));
+      }
 
-            catalystInstance.getJSModule(AppRegistry.class).runApplication(jsAppModuleName, appParams);
-            TimingModule timingModule = reactContext.getNativeModule(TimingModule.class);
+      catalystInstance
+        .getJSModule(AppRegistry.class)
+        .runApplication(jsAppModuleName, appParams);
+      TimingModule timingModule = reactContext.getNativeModule(
+        TimingModule.class
+      );
 
-            AndroidAutoModule carModule = mReactInstanceManager
-                    .getCurrentReactContext()
-                    .getNativeModule(AndroidAutoModule.class);
-            carModule.setCarContext(getCarContext(), screen);
+      AndroidAutoModule carModule = mReactInstanceManager
+        .getCurrentReactContext()
+        .getNativeModule(AndroidAutoModule.class);
+      carModule.setCarContext(getCarContext(), screen);
 
-            timingModule.onHostResume();
-        } finally {
-        }
-    }
+      timingModule.onHostResume();
+    } finally {}
+  }
 }
