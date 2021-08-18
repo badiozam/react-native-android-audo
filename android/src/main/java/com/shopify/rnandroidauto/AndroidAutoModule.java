@@ -60,6 +60,7 @@ public class AndroidAutoModule extends ReactContextBaseJavaModule {
         CarScreen screen = getScreen(name);
         if (screen == null) {
             screen = mCurrentCarScreen;
+	    Log.d("AUTO", "Screen " + name + " not found!");
         }
 
         reactCarRenderContext.setEventCallback(callback).setScreenMarker(screen.getMarker());
@@ -123,16 +124,19 @@ public class AndroidAutoModule extends ReactContextBaseJavaModule {
     public void setEventCallback(String name, Callback callback) {
         CarScreen screen = (CarScreen) getScreen(name);
 
+	Log.d("AUTO", "Set callback 1 for " + name);
         if (screen == null) {
             return;
         }
 
+	Log.d("AUTO", "Set callback 2 for " + name);
         ReactCarRenderContext reactCarRenderContext = reactCarRenderContextMap.get(screen);
 
         if (reactCarRenderContext == null) {
             return;
         }
 
+	Log.d("AUTO", "Set callback 3 for " + name);
         reactCarRenderContext.setEventCallback(callback);
     }
 
@@ -145,6 +149,7 @@ public class AndroidAutoModule extends ReactContextBaseJavaModule {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+		Log.d("AUTO", "Back button pressed");
                 sendEvent("android_auto:back_button", new WritableNativeMap());
             }
         };

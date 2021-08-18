@@ -45,7 +45,7 @@ public class TemplateParser {
             default:
                 return PaneTemplate.builder(
                         Pane.builder().setIsLoading(true).build()
-                ).setTitle("Shopify Local Delivery").build();
+                ).setTitle("Pane Template").build();
         }
     }
 
@@ -59,11 +59,10 @@ public class TemplateParser {
         try {
             loading = map.getBoolean("isLoading");
         } catch (NoSuchKeyException e) {
-            loading = children.size() == 0;
+            loading = children == null || children.size() == 0;
         }
 
-        paneBuilder.setIsLoading(false);
-
+        paneBuilder.setIsLoading(loading);
 
         ArrayList<Action> actions = new ArrayList();
 
@@ -71,6 +70,7 @@ public class TemplateParser {
             for (int i = 0; i < children.size(); i++) {
                 ReadableMap child = children.getMap(i);
                 String type = child.getString("type");
+		Log.d("AUTO", "Adding child to row");
 
                 if (type.equals("row")) {
                     paneBuilder.addRow(buildRow(child));
@@ -88,7 +88,15 @@ public class TemplateParser {
 
         PaneTemplate.Builder builder = PaneTemplate.builder(paneBuilder.build());
 
-        builder.setTitle(map.getString("title"));
+	String title = map.getString("title");
+	if ( title == null || title.length() == 0 )
+	{
+        	builder.setTitle("<No Title>");
+	}
+	else
+	{
+        	builder.setTitle(title);
+	}
 
         try {
             builder.setHeaderAction(getHeaderAction(map.getString("headerAction")));
@@ -108,6 +116,8 @@ public class TemplateParser {
     private ActionStrip parseActionStrip(ReadableMap map) {
         ActionStrip.Builder builder = ActionStrip.builder();
 
+	    if ( map != null )
+	    {
         ReadableArray actions = map.getArray("actions");
 
         for (int i = 0; i < actions.size(); i++) {
@@ -115,13 +125,19 @@ public class TemplateParser {
             Action action = parseAction(actionMap);
             builder.addAction(action);
         }
-
         return builder.build();
+	    }
+	    else
+	    {
+		    return null;
+	    }
     }
 
     private Action parseAction(ReadableMap map) {
         Action.Builder builder = Action.builder();
 
+	if ( map != null )
+	{
         builder.setTitle(map.getString("title"));
         try {
             builder.setBackgroundColor(getColor(map.getString("backgroundColor")));
@@ -135,7 +151,9 @@ public class TemplateParser {
                 invokeCallback(onPress);
             });
         } catch (NoSuchKeyException e) {
+		Log.d("AUTO", "Couldn't parseAction", e);
         }
+	}
 
         return builder.build();
     }
@@ -177,9 +195,10 @@ public class TemplateParser {
         try {
             loading = map.getBoolean("isLoading");
         } catch (NoSuchKeyException e) {
-            loading = children.size() == 0;
+            loading = children == null || children.size() == 0;
         }
 
+	Log.d("AUTO", "Rendering " + (loading ? "Yes" : "No"));
         builder.setIsLoading(loading);
 
         if (!loading) {
@@ -188,6 +207,7 @@ public class TemplateParser {
             for (int i = 0; i < children.size(); i++) {
                 ReadableMap child = children.getMap(i);
                 String type = child.getString("type");
+                Log.d("AUTO", "Adding " + type + " to row");
 
                 if (type.equals("row")) {
                     itemListBuilder.addItem(buildRow(child));
@@ -318,6 +338,12 @@ public class TemplateParser {
     }
 
     private Action getHeaderAction(String actionName) {
+	    if ( actionName == null )
+	    {
+		    return null;
+	    }
+	    else
+	    {
         switch (actionName) {
             case "back":
                 return Action.BACK;
@@ -326,6 +352,7 @@ public class TemplateParser {
             default:
                 return null;
         }
+	    }
     }
 
     private void invokeCallback(int callbackId) {

@@ -82,7 +82,7 @@ The react renderer comes with a bunch of native elements specific to Android Aut
 ## Example screen code
 
 ```tsx
-import {useCarNavigation} from 'react-native-android-auto';
+import { useCarNavigation } from "react-native-android-auto";
 
 export function Main() {
   const shop = useShop();

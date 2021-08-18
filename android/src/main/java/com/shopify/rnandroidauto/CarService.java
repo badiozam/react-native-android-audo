@@ -60,6 +60,7 @@ public final class CarService extends CarAppService {
     @Override
     @NonNull
     public Screen onCreateScreen(@Nullable Intent intent) {
+	Log.d("Auto", "On create screen " + intent.getAction() + " - " + intent.getDataString());
         screen = new CarScreen(getCarContext(), mReactInstanceManager.getCurrentReactContext());
         screen.setMarker("root");
         runJsApplication();
