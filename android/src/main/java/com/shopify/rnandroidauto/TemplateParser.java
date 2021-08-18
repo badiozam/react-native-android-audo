@@ -269,9 +269,11 @@ public class TemplateParser {
     }
 
     private ItemList parseItemListChildren(ReadableMap itemList) {
-        ReadableArray children = itemList.getArray("children");
         ItemList.Builder builder = ItemList.builder();
 
+	if ( map != null )
+	{
+        ReadableArray children = itemList.getArray("children");
         for (int i = 0; i < children.size(); i++) {
             ReadableMap child = children.getMap(i);
             String type = child.getString("type");
@@ -279,6 +281,7 @@ public class TemplateParser {
                 builder.addItem(buildRow(child));
             }
         }
+	}
 
         try {
             builder.setNoItemsMessage(itemList.getString("noItemsMessage"));
@@ -323,6 +326,8 @@ public class TemplateParser {
     }
 
     private Metadata parseMetaData(ReadableMap map) {
+	if ( map != null )
+	{
         switch (map.getString("type")) {
             case "place":
                 return Metadata
@@ -335,6 +340,11 @@ public class TemplateParser {
             default:
                 return null;
         }
+	}
+	else
+	{
+		return null;
+	}
     }
 
     private Action getHeaderAction(String actionName) {
